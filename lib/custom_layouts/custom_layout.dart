@@ -1,25 +1,47 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_components/utils/dimens.dart';
 
 import '../utils/colors.dart';
+import '../utils/constants.dart';
 import '../utils/strings.dart';
 
-class CustomLayout extends StatelessWidget {
+class CustomLayout extends StatefulWidget {
   const CustomLayout({Key? key}) : super(key: key);
 
   @override
+  State<CustomLayout> createState() => _CustomLayoutState();
+}
+
+class _CustomLayoutState extends State<CustomLayout> {
+
+  Formations formation = Formations.Four_Four_Two;
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FootballPitchBackgroundView(),
-        FormationView(),
-      ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          FootballPitchBackgroundView(),
+         FormationView(formation: this.formation),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        backgroundColor: Colors.blue,
+        onPressed: (){
+          setState(() {
+            formation = Formations.values[Random().nextInt(Formations.values.length)];
+          });
+        },
+      ),
     );
   }
 }
 
-class FormationView extends StatelessWidget {
-  const FormationView({Key? key}) : super(key: key);
+class FormationViewFourFourTwo extends StatelessWidget {
+  const FormationViewFourFourTwo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +68,127 @@ class FormationView extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             children: List.generate(4, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 15),
+          PlayerView(
+            isGoalKeeper: true,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FormationViewFourTwoThreeOne extends StatelessWidget {
+  const FormationViewFourTwoThreeOne({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: MARGIN_XXLARGE),
+      child: Column(
+        children: [
+          PlayerView(
+            isGoalKeeper: false,
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 25),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(3, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 40),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(2, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 50),
+          GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(4, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 50),
+          PlayerView(
+            isGoalKeeper: true,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FormationViewFourThreeThree extends StatelessWidget {
+  const FormationViewFourThreeThree({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: MARGIN_XXLARGE),
+      child: Column(
+        children: [
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(3, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 25),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(3, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 15),
+          GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(4, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 15),
+          PlayerView(
+            isGoalKeeper: true,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FormationViewThreeFourThree extends StatelessWidget {
+  const FormationViewThreeFourThree({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: MARGIN_XXLARGE),
+      child: Column(
+        children: [
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(3, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 25),
+          GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(4, (index) => PlayerView()),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 15),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(3, (index) => PlayerView()),
           ),
           SizedBox(height: MediaQuery.of(context).size.height / 15),
           PlayerView(
@@ -99,6 +242,33 @@ class FootballPitchBackgroundView extends StatelessWidget {
         fit: BoxFit.fill,
       ),
     );
+  }
+}
+
+class FormationView extends StatelessWidget {
+ final Formations formation;
+
+
+ FormationView({required this.formation});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: _generateFormation(formation),
+    );
+  }
+
+  Widget _generateFormation(Formations formation){
+    switch(formation){
+      case Formations.Four_Four_Two:
+        return FormationViewFourFourTwo();
+      case Formations.Four_Three_Three:
+        return FormationViewFourThreeThree();
+      case Formations.Four_Two_Three_One:
+        return FormationViewFourTwoThreeOne();
+      case Formations.THREE_FOUR_THREE:
+        return FormationViewThreeFourThree();
+    }
   }
 }
 
